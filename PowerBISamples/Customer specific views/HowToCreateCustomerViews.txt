@@ -1,0 +1,3 @@
+To ensure customer specific data is Access controlled, we recommend creating seperate views per customer. The query and report shared in this document provides a sample on how this can be done for a specific customer "demotenant3".
+
+Before running the sql query, ensure you change the name of the tenant in the sql script.

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[CspBillingData]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [UsageDate] DATETIME NULL, 
+	[CustomerBillableAccount] NVARCHAR(50) NULL,
+    [PartnerId] NVARCHAR(50) NULL, 
+    [PartnerName] NVARCHAR(1024) NULL, 
+    [PartnerBillableAccountId] NVARCHAR(50) NULL, 
+    [CustomerCompanyName] NVARCHAR(1024) NULL, 
+    [MpnId] NVARCHAR(50) NULL, 
+	[TiermpnId] Nvarchar(50) not null,
+    [InvoiceNumber] NVARCHAR(50) NULL, 
+    [SubscriptionId] NVARCHAR(50) NULL, 
+    [SubscriptionName] NVARCHAR(1024) NULL, 
+    [SubscriptionDescription] NVARCHAR(MAX) NULL, 
+    [OrderId] NVARCHAR(50) NULL, 
+    [ServiceName] NVARCHAR(255) NULL, 
+    [ServiceType] NVARCHAR(255) NULL, 
+    [ResourceGuid] NVARCHAR(50) NULL, 
+    [ResourceName] NVARCHAR(1024) NULL, 
+    [Region] NVARCHAR(255) NULL, 
+    [ConsumedQuantity] FLOAT NULL, 
+    [ChargeStartDate] DATETIME NULL, 
+    [ChargeEndDate] DATETIME NULL, 
+    [BillingProvider] NVARCHAR(255) NULL
+)
