@@ -9,8 +9,6 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BillingDataDB", "BillingDat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingWebJob", "BillingWebJob\BillingWebJob.csproj", "{B59B20CC-7F8A-4238-AC55-21E4D8C5162E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConfigurations", "TestConfigurations\TestConfigurations.csproj", "{F25CA816-F1E7-4B1F-AC9C-3ED1B74BE5FB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{B59B20CC-7F8A-4238-AC55-21E4D8C5162E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B59B20CC-7F8A-4238-AC55-21E4D8C5162E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B59B20CC-7F8A-4238-AC55-21E4D8C5162E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F25CA816-F1E7-4B1F-AC9C-3ED1B74BE5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F25CA816-F1E7-4B1F-AC9C-3ED1B74BE5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F25CA816-F1E7-4B1F-AC9C-3ED1B74BE5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F25CA816-F1E7-4B1F-AC9C-3ED1B74BE5FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
