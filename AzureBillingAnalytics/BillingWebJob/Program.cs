@@ -209,6 +209,7 @@ namespace BillingWebJob
         /// </summary>
         internal static void Main()
         {
+            ConfigHelper.TestConnections();
             JobHostConfiguration config = new JobHostConfiguration();
             config.UseTimers();
             JobHost host = new JobHost(config);

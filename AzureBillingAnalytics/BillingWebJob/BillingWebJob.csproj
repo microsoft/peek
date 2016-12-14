@@ -182,6 +182,7 @@
     <Compile Include="AzureAnalyticsDb\UserInfoField.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\ConfigurableCronSchedule.cs" />
     <Compile Include="Helpers\CspDataHelper.cs" />
     <Compile Include="Helpers\CSVFileWriter.cs" />
