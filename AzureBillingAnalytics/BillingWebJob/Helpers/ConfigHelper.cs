@@ -15,7 +15,8 @@ namespace BillingWebJob.Helpers
     {
         public static void TestConnections()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["AzureWebJobsDashboard"].ToString();
+            if (Convert.ToInt32(ConfigurationManager.AppSettings["ConfigFileCheck"]) == 0)return;
+                 
             Console.WriteLine("Testing AzureWebJobsDashboard Dashboard: " + ConfigHelper.TestStorageConnectionString("AzureWebJobsDashboard", "ConnectionString"));
             Console.WriteLine("Testing AzureWebJobsStorage Dashboard: " + ConfigHelper.TestStorageConnectionString("AzureWebJobsStorage", "ConnectionString"));
             Console.WriteLine("Testing StorageConnectionString Dashboard: " + ConfigHelper.TestStorageConnectionString("StorageConnectionString", "AppSetting"));
@@ -44,10 +45,9 @@ namespace BillingWebJob.Helpers
                 var storageAccount = CloudStorageAccount.Parse(connectionString);
                 //// Retrieve storage account from connection string.
                 //// Create the blob client.
-                var blobClient = storageAccount.CreateCloudFileClient();
+                var blobClient = storageAccount.CreateCloudBlobClient();
+                var serviceProperties = blobClient.GetServiceProperties();
                 return true;
-                //CloudBlobContainer container = blobClient. GetContainerReference("billingcspdata");
-                //container.Exists();
             }
             catch (Exception e)
             {
