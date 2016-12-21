@@ -1,6 +1,6 @@
 
 
-![peekimage](/Documentation/Images/peek.png)
+[![peekimage](/Documentation/Images/peek.png)](https://www.youtube.com/watch?v=aryx-FZjzhc)
 
 Customers are continuing to expand their footprint in Azure and there is a significant need to understand resource usage, optimize it as far as possible and plan for future growth. The Azure Usage/Billing Analytics is a one stop PaaS based solution which allows us to abstract the intricacies of collecting the usage data for different use cases (Enterprise Agreement, CSP and Direct Azure Subscriptions) and provides detailed visuals for near real time data analytics. The Power BI based report samples can be used to create multiple dashboards focused on EA subscribers, CSPs as well as CSP's customers to allow them to view their current usage, billing history and much more. This solution is intended as a Proof-of-Concept sample implementation.
 
