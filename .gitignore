@@ -119,3 +119,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 
+/AzureBillingAnalytics/BillingDataDb
