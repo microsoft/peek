@@ -48,6 +48,10 @@ namespace BillingDataApi.Controllers
             {
                 try
                 {
+                    if(customer.RelationshipToPartner.ToString() != "Reseller")
+                    {
+                        continue;
+                    }
                     var subscriptionsPage = partnerOperations.Customers.ById(customer.Id).Subscriptions.Get();
 
                     List<Microsoft.Store.PartnerCenter.Models.Subscriptions.Subscription> currentSubscriptions =
