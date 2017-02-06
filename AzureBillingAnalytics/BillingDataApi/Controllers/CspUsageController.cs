@@ -48,7 +48,7 @@ namespace BillingDataApi.Controllers
             {
                 try
                 {
-                    if(customer.RelationshipToPartner.ToString() != "Reseller")
+                    if(customer.RelationshipToPartner != CustomerPartnerRelationship.Reseller)
                     {
                         continue;
                     }
