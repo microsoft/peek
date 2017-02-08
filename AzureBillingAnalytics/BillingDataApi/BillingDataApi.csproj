@@ -202,6 +202,7 @@
     <Compile Include="Controllers\CspSummaryController.cs" />
     <Compile Include="Controllers\CspUsageController.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\CSPHelpers\CSPUsageHelper.cs" />
     <Compile Include="Helpers\EABillingHelpers\APISecurity.cs" />
     <Compile Include="Controllers\UserBillingController.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
