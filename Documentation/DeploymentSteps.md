@@ -15,13 +15,13 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
     1. Web Job dashboard
     2. Web Job Storage
     3. Custom data backup
-
-  The first two accounts are pre-requisites for Azure Web Job and are used for storing web job dashboard information and logs etc. The third account is used for keeping backups of the data that is stored in DB. We can use same or different storage accounts for all three. For the sample deployment covered in this document, we will create only one and use it for all three.
-  When you create the Storage account
-    1. Ensure Deployment model is “Resource Manager”
-    2. Ensure Account kind is “General Purpose”
-    3. Ensure correct resource group created in step 2 is selected.
-    4. Ensure location is same as resource group created in step 2.  
+    
+    The first two accounts are pre-requisites for Azure Web Job and are used for storing web job dashboard information and logs etc. The third account is used for keeping backups of the data that is stored in DB. We can use same or different storage accounts for all three. For the sample deployment covered in this document, we will create only one and use it for all three.
+    When you create the Storage account
+      1. Ensure Deployment model is “Resource Manager”
+      2. Ensure Account kind is “General Purpose”
+      3. Ensure correct resource group created in step 2 is selected.
+      4. Ensure location is same as resource group created in step 2.  
     ![deployment_guide](/Documentation/Images/image4.png)
  
   5. Once the Storage account(s) is/are successfully created, note the Storage Account Name(s) and Access Key(s) for later use:   
@@ -45,13 +45,9 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
 
 2. ##Data Extraction Service (Azure Web API) deployment
   
-  1. Code/binaries Access
-  
-    1.	*For deployment via Visual Studio:* From the source code, open AzureBillingAnalytics.sln in Visual Studio and look at the “BillingDataApi” project.
-    
-    2.	 *For deployment via FileZilla FTP Client:* From the source code link, copy the “BillingDataApi” folder from “OfflineDeploymentBinaries” folder to local computer.
+  1.	From the source code, open AzureBillingAnalytics.sln in Visual Studio and look at the “BillingDataApi” project.
 
-    3.	Now open web.config (if using Visual Studio for deployment) or open ~\BillingDataApi\bin\BillingDataApi.dll.config (if using FileZilla dor deployment). Different sections must be updated in accordance with the following sections for proper tokens in place for different types of subscriptions.
+  2.	Now open web.config (if using Visual Studio for deployment) or open ~\BillingDataApi\bin\BillingDataApi.dll.config (if using FileZilla dor deployment). Different sections must be updated in accordance with the following sections for proper tokens in place for different types of subscriptions.
 
   2.	Target accounts access token generation
 
@@ -68,10 +64,11 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
        *Update Deployment Resources Table: EA Account Section*
        Once both Enrollment number and key are captured, provide the correct values in web.config:  
        ![deployment_guide](/Documentation/Images/image11.png)
+       
     2. For CSP Account
     Ensure the correct values for following entries are provided in UserAuthentication section
       1. UserName
-      2.  Password
+      2. Password
       3. ApplicationId
   
       *Description*
@@ -97,9 +94,9 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
       ![deployment_guide](/Documentation/Images/image15.png)
       *Update Deployment Resources Table: CSP Account: App+User Section*
     [Optional] The current implementation requires App+User credentials only hence the above steps are sufficient. However, if the user wants to change this behavior by enabling AppAuthentication, then they must ensure the correct values for following entries are provided in **AppAuthentication** section:
-      1. ApplicationId
-      2. ApplicationSecret
-      3. Domain
+      * ApplicationId
+      * ApplicationSecret
+      * Domain
 
       *Note:* Some APIs under Partner Center managed API can also be accessed by App standalone authentication style. Since our solution requires App+User authentication, this step is optional. However, if the user intends to modify this solution and start using App Authentication, the following steps must be followed to generate ApplicationId, Application secret and Domain. 
       1.	Login into Partner Center portal at https://partnercenter.microsoft.com/ as a Global Admin.
@@ -121,50 +118,29 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
     3.	For Direct Azure Subscriptions
  To be supported in future iterations.
 
-  3.	##Publish to Azure
-    1.	For Deployment via Visual Studio
-      1. After all configurations have been updated successfully, rebuild the solution. Ensure it is successfully built.
+  3.	Publish to Azure
+    1. After all configurations have been updated successfully, rebuild the solution. Ensure it is successfully built.
       
-      2. Right click on the solution and click “Publish”.
+    2. Right click on the solution and click “Publish”.
       
-      3. Under “Select a publish target”, select “Microsoft Azure App Service”.  
+    3. Under “Select a publish target”, select “Microsoft Azure App Service”.  
       ![deployment_guide](/Documentation/Images/image19.png)
       *Note:* Depending on the version of Visual Studio/Azure SDK, the options may look slightly different, e.g. you may see “Microsoft Azure Web Apps” instead of “Microsoft Azure App Service”.  
       ![deployment_guide](/Documentation/Images/image20.png)
-      4. Ensure you are logged in with the correct Account (which has admin access in Azure RG published previously). If this is the first time publishing the App Service, click on “New”.  
+    4. Ensure you are logged in with the correct Account (which has admin access in Azure RG published previously). If this is the first time publishing the App Service, click on “New”.  
       ![deployment_guide](/Documentation/Images/image21.png)
-      5.	Provide appropriate name to the App Service Name, select appropriate subscription and previously created Resource Group.  
+    5.	Provide appropriate name to the App Service Name, select appropriate subscription and previously created Resource Group.  
       ![deployment_guide](/Documentation/Images/image22.png)      
-      6. Under App Service Plan, click new and create a new plan and ensure the size is at least Basic. This is to ensure “Always On” capability is available to our App Service.  
+    6. Under App Service Plan, click new and create a new plan and ensure the size is at least Basic. This is to ensure “Always On” capability is available to our App Service.  
       ![deployment_guide](/Documentation/Images/image23.png)
       *Note:* Depending on the version of Visual Studio/Azure SDK, the options may look slightly different, e.g. you may see slightly different User interface with additional options e.g. ability to add DB server. Set it as “No Database” and continue.  
       ![deployment_guide](/Documentation/Images/image24.png)
-      7. Click on Create. This will start deployment of the App service in Azure. Once complete, you will start seeing Connection details in “Connection” tab.
-      8. Click on “Validate Connection” to ensure connection is successful. Now click on “Publish”.  
+    7. Click on Create. This will start deployment of the App service in Azure. Once complete, you will start seeing Connection details in “Connection” tab.
+    8. Click on “Validate Connection” to ensure connection is successful. Now click on “Publish”.  
       ![deployment_guide](/Documentation/Images/image25.png)
-      9. Wait for Publishing process to complete successfully. You can view the status in Output Window.  
+    9. Wait for Publishing process to complete successfully. You can view the status in Output Window.  
       ![deployment_guide](/Documentation/Images/image26.png)
-    2.	For Deployment using FileZilla FTP Client
-      1.	Create Web App: Open the Azure portal and go to your Resource group (if any). Click “New” and search for “Web App”.  
-      ![deployment_guide](/Documentation/Images/image27.png)
-
-      2.	Give the App Service Name as “BillingDataApi” or another appropriate name. Select appropriate subscription and previously created Resource Group.
-      3.	If you do not have any existing App Service Plan, click on the “App Service Plan” and click on “Create New” and ensure the size is at least Basic. This is to ensure “Always On” capability is available to our App Service.
-      ![deployment_guide](/Documentation/Images/image28.png)
       
-      4. Click “Create” and wait till the deployment is completed.
-      
-      5. ** Get FTP Client Details**: Click on your Web App and on the “Settings”  blade select “Deployment Credentials” and suitable username and set the password. Note down the Username and Password as these will be your FTP Client credentials.  
-      ![deployment_guide](/Documentation/Images/image29.png)
-
-      6. From the Web App Essentials (Top of the Page) copy the FTPS hostname and full FTP Deployment Username including appname and save them for later use.
-      7. Connect to the FTP Server: Open FileZilla FTP Client and enter FTPS servername (Host), Username and Password and click on “Quickconnect”.  
-      ![deployment_guide](/Documentation/Images/image30.png)
-      
-      8. If you get the Unknown Certicate Dialog Box check the “Always trust cerificate in future sessions” and say “OK”.  
-      ![deployment_guide](/Documentation/Images/image31.png)
- 
-      9. Open the Api Binaries in your system. Open site folder on the server and then open wwwroot. Select all the files and copy them directly in wwwroot folder. Make sure you don’t delete the existing html page. Deleting it won’t have any impact on your deployment but it will just help you verify that your apis are successfully deployed  as shown in Section 2.4, Step 1.
   4. Deployment Verification
     1. Once Publishing process is successfully complete, the URL for the Service App will be opened. Note the URL and also ensure the Success message is visible on the Browser.  
     ![deployment_guide](/Documentation/Images/image32.png)
@@ -216,11 +192,9 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
 
 3. ##Persistent Data Storage (Azure database) deployment
   1. Code/binaries Access 
-    1.	*For deployment via Visual Studio:* From the source code, open "AzureBillingAnalytics.sln" in Visual Studio and look at “BillingDataDb” project. Once the solution is successfully opened, rebuild it and ensure it rebuilds successfully.  
-    
-    2.	*For deployment via FileZilla FTP Client:* From the source code link, copy the “BillingDataDb” from “OfflineDeploymentBinaries” folder to local computer and use BillingDataDb.sql. 
+    1.	From the source code, open "AzureBillingAnalytics.sln" in Visual Studio and look at “BillingDataDb” project. Once the solution is successfully opened, rebuild it and ensure it rebuilds successfully.  
 
-  2.   Publish to Azure
+  2. Publish to Azure
     1. For deployment using Visual Studio
       1.	Right click on the project and click “Publish”. The Publish database popup will appear.
         
@@ -243,17 +217,7 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
 
       8. Ensure the publishing process was successfully completed. This can be monitored from the “Data Tools Operation window”.  
         ![deployment_guide](/Documentation/Images/image47.png)
-    2. For offline deployment 
-      1. Connect from SSMS by providing the correct Server name, username and password. Ensure SQL Server Authentication is selected as the authentication mode.  
-      ![deployment_guide](/Documentation/Images/image48.png)
- 
-      2. If connected for the first time, you may get an error mentioning that your IP range does not have access to the server. In that case open the portal and go to your SQL Database and click on Set Server Firewall and add your IP range and connect back to your server.  
-      ![deployment_guide](/Documentation/Images/image49.png)
- 
-      3. Open the Script in the “BillingDataDb” folder which you copied earlier and change the name of the database in the first line of the script to your database name.  
-      ![deployment_guide](/Documentation/Images/image50.png)
- 
-      4. Verify by refreshing the connection and checking if the new tables & views appear.
+        
   3. Deployment Verification
     1. Once the deployment is successful, we can use any SQL UI client (like SSMS, Linqpad etc) to connect with the server and verify the database has been configured correctly. E.g. connect from SSMS by providing the correct Server name, username and password. Ensure SQL Server Authentication is selected as the authentication mode.  
     ![deployment_guide](/Documentation/Images/image48.png)
@@ -262,14 +226,12 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
     ![deployment_guide](/Documentation/Images/image51.png)
 
 4. ##Data Aggregation Engine (Azure Web job) deployment
-  1. Code/binaries Access
-    1. For deployment via Visual Studio: From the source code, open AzureBillingAnalytics.sln in Visual Studio and look at "BillingWebJob” project. Once the solution is successfully opened, rebuild it and ensure it rebuilds successfully.  
-    2. For deployment via FileZilla FTP Client: From the source code link, copy the “BillingWebJob” folder from “OfflineDeploymentBinaries” folder to local computer.
+  
+  1. From the source code, open AzureBillingAnalytics.sln in Visual Studio and look at "BillingWebJob” project. Once the solution is successfully opened, rebuild it and ensure it rebuilds successfully.  
+    
   2.  Update Configurations
     1. Open Configuration file.
-      1. *For Deployment using Visual Studio:* Open app.config. 
-       
-      2. *For Offline Deployment:* Extract files from offline deployment package and edit BillingWebjob.exe.config.
+      1. Open app.config.
     
       Each section must be updated with relevant information from previous sections. Update web job storage account connection strings. Provide the appropriate values which were created in section 1, step 3. Ensure both accountname and accountkey are updated in proper format:
       *The format of the connection string is "DefaultEndpointsProtocol=https;AccountName=[NAME];AccountKey=[KEY]"*  
@@ -298,31 +260,23 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
       8.	Next provide the start and end month for each customer type for which the job should be run. Leave End date as empty to ensure the last date is always current month.  
       ![deployment_guide](/Documentation/Images/image60.png)
   3. Publish to Azure
-    1.	For Deployment using Visual Studio
-      1.	Rebuild the solution and ensure it rebuilds successfully.
+    1.	Rebuild the solution and ensure it rebuilds successfully.
       
-      2.	Right click on the project and select “Publish as Azure Web Job”.
+    2.	Right click on the project and select “Publish as Azure Web Job”.
       
-      3.	In the Publish web dialog box, go to “Profile” section & select Microsoft Azure App service.
+    3.	In the Publish web dialog box, go to “Profile” section & select Microsoft Azure App service.
       
-      4.	In the popup, select appropriate account and subscription.
+    4.	In the popup, select appropriate account and subscription.
       
-      5.	Ensure that you select the same App Service that was published in section 2 for API.  
+    5.	Ensure that you select the same App Service that was published in section 2 for API.  
       ![deployment_guide](/Documentation/Images/image61.png)
       
-      6.	In the Connection tab, click on “Validate Connection” and ensure success message appears.
+    6.	In the Connection tab, click on “Validate Connection” and ensure success message appears.
       
-      7.	Click on “Publish”. Monitor progress in Output window.  
+    7.	Click on “Publish”. Monitor progress in Output window.  
       ![deployment_guide](/Documentation/Images/image62.png)
  
-    2.	For offline Deployment 
-      1.	After making all the changes in “BillingWebjob.exe.config” zip the folder in which all the binaries are present and keep it for later use.
-      
-      2.	Create Web Job: Open the Azure portal and go to your Resource group (if any). Click on your Web App. In Settings blade go to Webjobs.  
-      ![deployment_guide](/Documentation/Images/image63.png)
-
-      3.	Click on “Add” and in “File Upload” upload the zip and say OK.  
-      ![deployment_guide](/Documentation/Images/image64.png)
+   
 
   4.	Deployment Verification
     1.	To verify that the job has been successfully configured, login into Azure portal.
