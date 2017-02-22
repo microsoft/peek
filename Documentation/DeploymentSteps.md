@@ -1,6 +1,7 @@
 #Deployment Steps
 
-We recommend that you use the [Accounts Template](/Documentation/AccountsTemplate.docx) to collect all relevant accounts information in one place as you go through the whole deployment process.
+We recommend that you use the [Accounts Template](/Documentation/AccountsTemplate.docx) to collect all relevant accounts information in one place as you go through the whole deployment process.  
+*Note: This documentation covers deployment of the three modules for EA and CSP which is completely independent of each other* 
 
 1. ##Azure Pre-configurations
 
