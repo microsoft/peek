@@ -166,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http.Formatting">
@@ -201,6 +200,7 @@
     <Compile Include="Common\EaBillingException.cs" />
     <Compile Include="Controllers\CspSummaryController.cs" />
     <Compile Include="Controllers\CspUsageController.cs" />
+    <Compile Include="Controllers\CspUtilizationController.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\EABillingHelpers\APISecurity.cs" />
     <Compile Include="Controllers\UserBillingController.cs">
@@ -318,6 +318,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.StyleCop" />
+    <None Include="Properties\PublishProfiles\peekwebapp - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
