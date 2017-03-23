@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Store.PartnerCenter.Models;
 using Microsoft.Store.PartnerCenter.Models.Customers;
 using System.Diagnostics;
+using Microsoft.Store.PartnerCenter;
 
 namespace BillingDataApi.Controllers
 {
@@ -17,96 +18,75 @@ namespace BillingDataApi.Controllers
     public class CspUtilizationController : ApiController
     {
         private AuthenticationHelper authHelper = new AuthenticationHelper();
-       
-        [Route(@"")]
-        // public List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> GetDataForCustomerSubscription()
-      
-        public void  GetDataForCustomerSubscription()
+
+        public static List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> GetDataPerSubscription(Customer customer, Microsoft.Store.PartnerCenter.Models.Subscriptions.Subscription subscription, IAggregatePartner partnerOperations)
         {
-            List<Customer> customers2 = new List<Customer>();
-        var partnerOperations = this.authHelper.UserPartnerOperations;
             List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> ResourceUtilizationList = new List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord>();
-
-
-            SeekBasedResourceCollection<Customer> customersPage = partnerOperations.Customers.Get();
-            List<Customer> customers = customersPage.Items.ToList();
-
             try
             {
+                 var subscriptionPage = partnerOperations.Customers.ById(customer.Id).Subscriptions.ById(subscription.Id);
+                var utilizationRecords = subscriptionPage.Utilization.Azure.Query(
+                       DateTimeOffset.Now.AddYears(-6),
+                       DateTimeOffset.Now, Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationGranularity.Daily, size: 500);
 
-               foreach (var customer  in customers)
+                var utilizationRecordEnumerator = partnerOperations.Enumerators.Utilization.Azure.Create(utilizationRecords);
+
+                while (utilizationRecordEnumerator.HasValue)
                 {
-                Debug.WriteLine("{0}, Thread Id= {1}", customer, Thread.CurrentThread.ManagedThreadId);
-
-                var subscriptionsPage = partnerOperations.Customers.ById(customer.Id).Subscriptions.Get();
-
-
-                    List<Microsoft.Store.PartnerCenter.Models.Subscriptions.Subscription> currentSubscriptions =
-                        subscriptionsPage.Items.ToList();
-
-
-                    foreach (
-                        Microsoft.Store.PartnerCenter.Models.Subscriptions.Subscription subscription in
-                        currentSubscriptions)
+                    foreach (var item in utilizationRecordEnumerator.Current.Items)
                     {
-
-
-                        var subscriptionPage =
-                            partnerOperations.Customers.ById(customer.Id).Subscriptions.ById(subscription.Id);
-
-
-                        var utilizationRecords = subscriptionPage.Utilization.Azure.Query(
-                   DateTimeOffset.Now.AddYears(-6),
-                   DateTimeOffset.Now, Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationGranularity.Daily, size: 500);
-
-                        var utilizationRecordEnumerator = partnerOperations.Enumerators.Utilization.Azure.Create(utilizationRecords);
-
-                         while (utilizationRecordEnumerator.HasValue)
-                        {
-                            foreach (var item in utilizationRecordEnumerator.Current.Items)
-                            {
-                                ResourceUtilizationList.Add(item);
-                            }
-                            utilizationRecordEnumerator.Next();
-                        }
-
-
-
-
-
+                        ResourceUtilizationList.Add(item);
                     }
-                    customers2.Add(customer);
-                  //  Thread.Sleep(10);
+                    utilizationRecordEnumerator.Next();
                 }
-                   //);
+
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }           
+            return ResourceUtilizationList;
+        }
+
+        public static List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> GetDataPerCustomer(Customer customer, IAggregatePartner partnerOperations)
+        {
+            List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> ResourceUtilizationList = new List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord>();
+            try
+            {
+                var subscriptionsPage = partnerOperations.Customers.ById(customer.Id).Subscriptions.Get();
+                List<Microsoft.Store.PartnerCenter.Models.Subscriptions.Subscription> subscriptions = subscriptionsPage.Items.ToList();
+                Parallel.ForEach(subscriptions, subscription =>
+                {
+                    ResourceUtilizationList.AddRange(GetDataPerSubscription(customer, subscription, partnerOperations));
+                });
+                
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return ResourceUtilizationList;
+        }
+
+        [Route(@"")]
+        public List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> GetDataForCustomerSubscription()
+        {
+            var partnerOperations = this.authHelper.UserPartnerOperations;
+            List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> ResourceUtilizationList = new List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord>();
+            try
+            {
+                SeekBasedResourceCollection<Customer> customersPage = partnerOperations.Customers.Get();
+                List<Customer> customers = customersPage.Items.ToList();           
+                Parallel.ForEach(customers, customer => {
+                    ResourceUtilizationList.AddRange(GetDataPerCustomer(customer, partnerOperations));
+                });
+                      
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                
             }
-            Console.WriteLine(customers2[1].ToString());
-
-
-           // var utilizationRecords = partnerOperations.Customers[""].Subscriptions[""].Utilization.Azure.Query(
-           //     DateTimeOffset.Now.AddYears(-6),
-           //     DateTimeOffset.Now, Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationGranularity.Daily, size: 500);
-
-           //var utilizationRecordEnumerator = partnerOperations.Enumerators.Utilization.Azure.Create(utilizationRecords);
-
-           // List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord> ResourceUtilizationList = new List<Microsoft.Store.PartnerCenter.Models.Utilizations.AzureUtilizationRecord>();
-           // while (utilizationRecordEnumerator.HasValue)
-           // {
-           //     foreach (var item in utilizationRecordEnumerator.Current.Items)
-           //     {
-           //         ResourceUtilizationList.Add(item);
-           //     }
-           //     utilizationRecordEnumerator.Next();
-           // }
-
-        //    return ResourceUtilizationList;
-
-            //return "";
+            return ResourceUtilizationList;
         }
     }
 }
