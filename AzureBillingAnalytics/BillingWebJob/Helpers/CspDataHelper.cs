@@ -29,7 +29,7 @@ namespace BillingWebJob.Helpers
         /// <summary>
         /// Object of API class to access it's methods.
         /// </summary>
-        internal static BillingWebJob.AzureAnalyticsApi AzureAnalyticsApi = new BillingWebJob.AzureAnalyticsApi();
+        internal static BillingWebJob.BillingDataApi AzureAnalyticsApi = new BillingWebJob.BillingDataApi();
 
         /// <summary>
         /// Parse the billing data collected from API into a custom class.
@@ -55,8 +55,8 @@ namespace BillingWebJob.Helpers
                         new CspBillingData
                         {
                             BillingProvider = relevantLineItem.BillingProvider,
-                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value.DateTime,
-                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value.DateTime,
+                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value,
+                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value,
                             ConsumedQuantity = relevantLineItem.ConsumedQuantity,
                             CustomerBillableAccount = relevantLineItem.CustomerBillableAccount,
                             CustomerCompanyName = relevantLineItem.CustomerCompanyName,
@@ -75,7 +75,7 @@ namespace BillingWebJob.Helpers
                             SubscriptionId = relevantLineItem.SubscriptionId,
                             SubscriptionName = relevantLineItem.SubscriptionName,
                             TiermpnId = relevantLineItem.TierMpnId,
-                            UsageDate = (DateTime?)relevantLineItem.UsageDate.Value.DateTime
+                            UsageDate = (DateTime?)relevantLineItem.UsageDate.Value
                         });
                 }
             }
@@ -107,8 +107,8 @@ namespace BillingWebJob.Helpers
                     cspBillingRecordsToBeAppendedInDb.Add(
                         new CspSummaryData
                         {
-                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value.DateTime,
-                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value.DateTime,
+                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value,
+                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value,
                             ChargeType = relevantLineItem.ChargeType,
                             ConsumedQuantity = relevantLineItem.ConsumedQuantity,
                             ConsumptionDiscount = relevantLineItem.ConsumptionDiscount,
@@ -174,8 +174,8 @@ namespace BillingWebJob.Helpers
                     newItemsForDatabase.Add(
                         new CspUsageData
                         {
-                            BillingEndDate = (DateTime?)usageRecord.BillingEndDate.Value.DateTime,
-                            BillingStartDate = (DateTime?)usageRecord.BillingStartDate.Value.DateTime,
+                            BillingEndDate = (DateTime?)usageRecord.BillingEndDate.Value,
+                            BillingStartDate = (DateTime?)usageRecord.BillingStartDate.Value,
                             Category = usageRecord.Category,
                             CustomerCommerceId = usageRecord.CustomerCommerceId,
                             CustomerDomain = usageRecord.CustomerDomain,
@@ -434,9 +434,9 @@ namespace BillingWebJob.Helpers
                     // Call API
                     Console.WriteLine("No existing records found in Database for this month. Calling API for the data..");
                     cspSummaryRecordsFromApi =
-                        AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                        AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                     cspBillingRecordsFromApi =
-                        AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                        AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                     Console.WriteLine(
                         "{0} data rows returned from the csp summary api.",
                         cspSummaryRecordsFromApi.Body.Count);
@@ -479,9 +479,9 @@ namespace BillingWebJob.Helpers
                         Console.WriteLine("Successfully deleted {0} Rows.", result, month, year);
                         Console.WriteLine("Calling API for current month's data.. ");
                         cspSummaryRecordsFromApi =
-                            AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                            AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                         cspBillingRecordsFromApi =
-                            AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                            AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                         Console.WriteLine(
                             "{0} data rows returned from the csp summary api.",
                             cspSummaryRecordsFromApi.Body.Count);
@@ -527,14 +527,14 @@ namespace BillingWebJob.Helpers
             Console.WriteLine(
                 "\nFetching records for Current Month's Usage from the API. This may take a while. If this operation is timimg out, consider increasing the TimeOut limit in Configuration file. ");
 
-            HttpOperationResponse<IList<CspAzureResourceUsageRecord>> cspUsageRecordsFromApi =
-                AzureAnalyticsApi.CspUsage.GetAllDataWithOperationResponseAsync().Result;
-            Console.WriteLine("\n" + cspUsageRecordsFromApi.Body.Count + " records fetched from the API.. ");
+            //HttpOperationResponse<IList<CspAzureResourceUsageRecord>> cspUsageRecordsFromApi =
+            //    AzureAnalyticsApi.CspUsage.GetAllDataWithHttpMessagesAsync().Result;
+            //Console.WriteLine("\n" + cspUsageRecordsFromApi.Body.Count + " records fetched from the API.. ");
 
-            if (cspUsageRecordsFromApi.Body != null && cspUsageRecordsFromApi.Body.Count > 0)
-            {
-                totalRecordsCount += CspDataHelper.UpdateCurrentUsageRecordsInDb(cspUsageRecordsFromApi.Body);
-            }
+            //if (cspUsageRecordsFromApi.Body != null && cspUsageRecordsFromApi.Body.Count > 0)
+            //{
+            //    totalRecordsCount += CspDataHelper.UpdateCurrentUsageRecordsInDb(cspUsageRecordsFromApi.Body);
+            //}
 
             // Historic Usage and Billing
             Console.WriteLine("\nNow fetching historic usage and billing records from the API month-by-month.");

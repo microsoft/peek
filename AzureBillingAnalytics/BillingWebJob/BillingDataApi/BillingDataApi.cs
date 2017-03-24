@@ -19,6 +19,7 @@ namespace BillingWebJob
     using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
     using Models;
+    using System.Configuration;
 
     public partial class BillingDataApi : ServiceClient<BillingDataApi>, IBillingDataApi
     {
@@ -78,9 +79,25 @@ namespace BillingWebJob
         /// <param name='handlers'>
         /// Optional. The delegating handlers to add to the http client pipeline.
         /// </param>
+        /// 
+        public BillingDataApi()
+            : base()
+        {
+            this.CspBilling = new CspBilling(this);
+            this.CspSummary = new CspSummary(this);
+            this.CspUsage = new CspUsage(this);
+            this.EaBilling = new EaBilling(this);
+            this.UserBilling = new UserBilling(this);
+            this.BaseUri = new Uri(ConfigurationManager.AppSettings["WebApiUrl"]);
+        }
         public  BillingDataApi(params DelegatingHandler[] handlers) : base(handlers)
         {
-            this.Initialize();
+            this.CspBilling = new CspBilling(this);
+            this.CspSummary = new CspSummary(this);
+            this.CspUsage = new CspUsage(this);
+            this.EaBilling = new EaBilling(this);
+            this.UserBilling = new UserBilling(this);
+            this.BaseUri = new Uri(ConfigurationManager.AppSettings["WebApiUrl"]);
         }
 
         /// <summary>
@@ -94,7 +111,12 @@ namespace BillingWebJob
         /// </param>
         protected BillingDataApi(HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : base(rootHandler, handlers)
         {
-            this.Initialize();
+            this.CspBilling = new CspBilling(this);
+            this.CspSummary = new CspSummary(this);
+            this.CspUsage = new CspUsage(this);
+            this.EaBilling = new EaBilling(this);
+            this.UserBilling = new UserBilling(this);
+            this.BaseUri = new Uri(ConfigurationManager.AppSettings["WebApiUrl"]);
         }
 
         /// <summary>

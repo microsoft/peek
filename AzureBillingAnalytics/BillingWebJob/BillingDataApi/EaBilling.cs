@@ -18,6 +18,8 @@ namespace BillingWebJob
     using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
     using Models;
+    using Microsoft.IdentityModel.Clients.ActiveDirectory;
+    using Helpers;
 
     /// <summary>
     /// EaBilling operations.
@@ -39,6 +41,7 @@ namespace BillingWebJob
             this.Client = client;
         }
 
+        private AuthenticationResult authTokenObject = AuthenticationHelper.GetAuthenticationResult();
         /// <summary>
         /// Gets a reference to the BillingDataApi
         /// </summary>
@@ -77,18 +80,19 @@ namespace BillingWebJob
             HttpResponseMessage _httpResponse = null;
             _httpRequest.Method = new HttpMethod("GET");
             _httpRequest.RequestUri = new Uri(_url);
+            _httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authTokenObject.AccessToken);
             // Set Headers
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
+            //if (customHeaders != null)
+            //{
+            //    foreach(var _header in customHeaders)
+            //    {
+            //        if (_httpRequest.Headers.Contains(_header.Key))
+            //        {
+            //            _httpRequest.Headers.Remove(_header.Key);
+            //        }
+            //        _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+            //    }
+            //}
 
             // Serialize Request
             string _requestContent = null;
@@ -191,17 +195,17 @@ namespace BillingWebJob
             _httpRequest.Method = new HttpMethod("GET");
             _httpRequest.RequestUri = new Uri(_url);
             // Set Headers
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
+            //if (customHeaders != null)
+            //{
+            //    foreach(var _header in customHeaders)
+            //    {
+            //        if (_httpRequest.Headers.Contains(_header.Key))
+            //        {
+            //            _httpRequest.Headers.Remove(_header.Key);
+            //        }
+            //        _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+            //    }
+            //}
 
             // Serialize Request
             string _requestContent = null;
@@ -314,17 +318,17 @@ namespace BillingWebJob
             _httpRequest.Method = new HttpMethod("GET");
             _httpRequest.RequestUri = new Uri(_url);
             // Set Headers
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
+            //if (customHeaders != null)
+            //{
+            //    foreach(var _header in customHeaders)
+            //    {
+            //        if (_httpRequest.Headers.Contains(_header.Key))
+            //        {
+            //            _httpRequest.Headers.Remove(_header.Key);
+            //        }
+            //        _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+            //    }
+            //}
 
             // Serialize Request
             string _requestContent = null;
@@ -446,17 +450,17 @@ namespace BillingWebJob
             _httpRequest.Method = new HttpMethod("GET");
             _httpRequest.RequestUri = new Uri(_url);
             // Set Headers
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
-                {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-                }
-            }
+            //if (customHeaders != null)
+            //{
+            //    foreach(var _header in customHeaders)
+            //    {
+            //        if (_httpRequest.Headers.Contains(_header.Key))
+            //        {
+            //            _httpRequest.Headers.Remove(_header.Key);
+            //        }
+            //        _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+            //    }
+            //}
 
             // Serialize Request
             string _requestContent = null;
