@@ -99,8 +99,8 @@
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.24.304111323\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=0.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.0.9.6\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.2\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Store.PartnerCenter, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -155,35 +155,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureAnalyticsApi\AzureAnalyticsApi.cs" />
-    <Compile Include="AzureAnalyticsApi\AzureAnalyticsApiExtensions.cs" />
-    <Compile Include="AzureAnalyticsApi\CspBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\CspBillingExtensions.cs" />
-    <Compile Include="AzureAnalyticsApi\CspSummary.cs" />
-    <Compile Include="AzureAnalyticsApi\CspSummaryExtensions.cs" />
-    <Compile Include="AzureAnalyticsApi\CspUsage.cs" />
-    <Compile Include="AzureAnalyticsApi\CspUsageExtensions.cs" />
-    <Compile Include="AzureAnalyticsApi\EaBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\EaBillingExtensions.cs" />
-    <Compile Include="AzureAnalyticsApi\IAzureAnalyticsApi.cs" />
-    <Compile Include="AzureAnalyticsApi\ICspBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\ICspSummary.cs" />
-    <Compile Include="AzureAnalyticsApi\ICspUsage.cs" />
-    <Compile Include="AzureAnalyticsApi\IEaBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\IUserBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\BillingDetailLineItem.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\BillingDetailLineItemCollection.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\CspAzureResourceUsageRecord.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\CspAzureResourceUsageRecordCollection.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\CspUsageLineItem.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\CspUsageLineItemCollection.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\ResourceAttributes.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\UsageBasedLineItem.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\UsageBasedLineItemCollection.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\UsageInfoModel.cs" />
-    <Compile Include="AzureAnalyticsApi\Models\UsageInfoModelCollection.cs" />
-    <Compile Include="AzureAnalyticsApi\UserBilling.cs" />
-    <Compile Include="AzureAnalyticsApi\UserBillingExtensions.cs" />
     <Compile Include="AzureAnalyticsDb\AuditData.cs" />
     <Compile Include="AzureAnalyticsDb\AzureAnalyticsDbModel.cs" />
     <Compile Include="AzureAnalyticsDb\CspBillingData.cs" />
@@ -192,6 +163,35 @@
     <Compile Include="AzureAnalyticsDb\EaBillingData.cs" />
     <Compile Include="AzureAnalyticsDb\UserBillingData.cs" />
     <Compile Include="AzureAnalyticsDb\UserInfoField.cs" />
+    <Compile Include="BillingDataApi\BillingDataApi.cs" />
+    <Compile Include="BillingDataApi\CspBilling.cs" />
+    <Compile Include="BillingDataApi\CspBillingExtensions.cs" />
+    <Compile Include="BillingDataApi\CspSummary.cs" />
+    <Compile Include="BillingDataApi\CspSummaryExtensions.cs" />
+    <Compile Include="BillingDataApi\CspUsage.cs" />
+    <Compile Include="BillingDataApi\CspUsageExtensions.cs" />
+    <Compile Include="BillingDataApi\CspUtilization.cs" />
+    <Compile Include="BillingDataApi\CspUtilizationExtensions.cs" />
+    <Compile Include="BillingDataApi\EaBilling.cs" />
+    <Compile Include="BillingDataApi\EaBillingExtensions.cs" />
+    <Compile Include="BillingDataApi\IBillingDataApi.cs" />
+    <Compile Include="BillingDataApi\ICspBilling.cs" />
+    <Compile Include="BillingDataApi\ICspSummary.cs" />
+    <Compile Include="BillingDataApi\ICspUsage.cs" />
+    <Compile Include="BillingDataApi\ICspUtilization.cs" />
+    <Compile Include="BillingDataApi\IEaBilling.cs" />
+    <Compile Include="BillingDataApi\IUserBilling.cs" />
+    <Compile Include="BillingDataApi\Models\AzureInstanceData.cs" />
+    <Compile Include="BillingDataApi\Models\AzureResource.cs" />
+    <Compile Include="BillingDataApi\Models\AzureUtilizationRecord.cs" />
+    <Compile Include="BillingDataApi\Models\BillingDetailLineItem.cs" />
+    <Compile Include="BillingDataApi\Models\CspAzureResourceUsageRecord.cs" />
+    <Compile Include="BillingDataApi\Models\CspUsageLineItem.cs" />
+    <Compile Include="BillingDataApi\Models\ResourceAttributes.cs" />
+    <Compile Include="BillingDataApi\Models\UsageBasedLineItem.cs" />
+    <Compile Include="BillingDataApi\Models\UsageInfoModel.cs" />
+    <Compile Include="BillingDataApi\UserBilling.cs" />
+    <Compile Include="BillingDataApi\UserBillingExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\ConfigurableCronSchedule.cs" />

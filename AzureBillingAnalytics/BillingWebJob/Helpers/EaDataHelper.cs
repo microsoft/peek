@@ -29,7 +29,7 @@ namespace BillingWebJob.Helpers
         /// <summary>
         /// Object of API class to access it's methods.
         /// </summary>
-        private static BillingWebJob.AzureAnalyticsApi azureAnalyticsApi = new BillingWebJob.AzureAnalyticsApi();
+        private static BillingWebJob.BillingDataApi azureAnalyticsApi = new BillingWebJob.BillingDataApi();
 
         /// <summary>
         /// Main EA Routine entry point.
@@ -221,7 +221,7 @@ namespace BillingWebJob.Helpers
                     // Call API
                     Console.WriteLine("No existing records found in Database for this month. Calling API for the data..");
                     eaBillingRecordsFromApi =
-                        azureAnalyticsApi.EaBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                        azureAnalyticsApi.EaBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                 }
                 else
                 {
@@ -243,7 +243,7 @@ namespace BillingWebJob.Helpers
                             year);
                         Console.WriteLine("Calling API for current month's data.. ");
                         eaBillingRecordsFromApi =
-                            azureAnalyticsApi.EaBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                            azureAnalyticsApi.EaBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                         if (eaBillingRecordsFromApi.Body == null)
                         {
                             Console.WriteLine("No data obtained from the APIs for this month..");
