@@ -14,9 +14,9 @@ namespace BillingWebJob.AzureAnalyticsDb
     {
         public int Id { get; set; }
 
-        public DateTime? UsageStartDate { get; set; }
+        public DateTime? UsageStartTime { get; set; }
 
-        public DateTime? UsageEndDate { get; set; }
+        public DateTime? UsageEndTime { get; set; }
 
         [StringLength(1024)]
         public string ResourceId { get; set; }
@@ -50,7 +50,7 @@ namespace BillingWebJob.AzureAnalyticsDb
         [StringLength(1024)]
         public string InstanceDataOrderNumber { get; set; }
 
-        public double? InstanceDatatags { get; set; }
+        public string InstanceDatatags { get; set; }
 
         [StringLength(1024)]
         public string Attributes { get; set; }

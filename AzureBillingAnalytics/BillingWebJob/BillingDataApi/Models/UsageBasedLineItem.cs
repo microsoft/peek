@@ -21,7 +21,7 @@ namespace BillingWebJob.Models
         /// <summary>
         /// Initializes a new instance of the UsageBasedLineItem class.
         /// </summary>
-        public UsageBasedLineItem(int? detailLineItemId = default(int?), string sku = default(string), double? includedQuantity = default(double?), double? overageQuantity = default(double?), double? listPrice = default(double?), double? consumptionPrice = default(double?), double? consumptionDiscount = default(double?), string currency = default(string), double? pretaxCharges = default(double?), double? taxAmount = default(double?), double? postTaxTotal = default(double?), double? pretaxEffectiveRate = default(double?), double? postTaxEffectiveRate = default(double?), string chargeType = default(string), int? invoiceLineItemType = default(int?), string partnerId = default(string), string partnerName = default(string), string partnerBillableAccountId = default(string), string customerId = default(string), string customerCompanyName = default(string), int? mpnId = default(int?), int? tier2MpnId = default(int?), string invoiceNumber = default(string), string domainName = default(string), string billingCycleType = default(string), string subscriptionId = default(string), string subscriptionName = default(string), string subscriptionDescription = default(string), string orderId = default(string), string serviceName = default(string), string serviceType = default(string), string resourceGuid = default(string), string resourceName = default(string), string region = default(string), double? consumedQuantity = default(double?), DateTime? chargeStartDate = default(DateTime?), DateTime? chargeEndDate = default(DateTime?), int? billingProvider = default(int?), ResourceAttributes attributes = default(ResourceAttributes))
+        public UsageBasedLineItem(int? detailLineItemId = default(int?), string sku = default(string), double? includedQuantity = default(double?), double? overageQuantity = default(double?), double? listPrice = default(double?), double? consumptionPrice = default(double?), double? consumptionDiscount = default(double?), string currency = default(string), double? pretaxCharges = default(double?), double? taxAmount = default(double?), double? postTaxTotal = default(double?), double? pretaxEffectiveRate = default(double?), double? postTaxEffectiveRate = default(double?), string chargeType = default(string), string invoiceLineItemType = default(string), string partnerId = default(string), string partnerName = default(string), string partnerBillableAccountId = default(string), string customerId = default(string), string customerCompanyName = default(string), int? mpnId = default(int?), int? tier2MpnId = default(int?), string invoiceNumber = default(string), string domainName = default(string), string billingCycleType = default(string), string subscriptionId = default(string), string subscriptionName = default(string), string subscriptionDescription = default(string), string orderId = default(string), string serviceName = default(string), string serviceType = default(string), string resourceGuid = default(string), string resourceName = default(string), string region = default(string), double? consumedQuantity = default(double?), DateTime? chargeStartDate = default(DateTime?), DateTime? chargeEndDate = default(DateTime?), string billingProvider = default(string), ResourceAttributes attributes = default(ResourceAttributes))
         {
             DetailLineItemId = detailLineItemId;
             Sku = sku;
@@ -137,7 +137,7 @@ namespace BillingWebJob.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "InvoiceLineItemType")]
-        public int? InvoiceLineItemType { get; private set; }
+        public string InvoiceLineItemType { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -252,7 +252,7 @@ namespace BillingWebJob.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "BillingProvider")]
-        public int? BillingProvider { get; private set; }
+        public string BillingProvider { get; private set; }
 
         /// <summary>
         /// </summary>

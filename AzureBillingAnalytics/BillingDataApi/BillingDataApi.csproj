@@ -318,6 +318,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.StyleCop" />
+    <None Include="Properties\PublishProfiles\BillingDataApi20170327041241 - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\peekwebapp - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

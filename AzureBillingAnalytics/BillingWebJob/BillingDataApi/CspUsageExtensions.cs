@@ -44,6 +44,5 @@ namespace BillingWebJob
                     return _result.Body;
                 }
             }
-
     }
 }

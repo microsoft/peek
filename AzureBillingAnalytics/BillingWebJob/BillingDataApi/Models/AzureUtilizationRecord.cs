@@ -71,7 +71,7 @@ namespace BillingWebJob.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Attributes")]
-        public ResourceAttributes Attributes { get; private set; }
+        public ResourceAttributes Attributes { get; set; }
 
     }
 }
