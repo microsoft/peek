@@ -1,5 +1,5 @@
-# Azure Billing Analytics
-### What is Azure Billing Analytics?
+# Azure Usage Analytics
+### What is Azure Usage Analytics?
 Customers are continuing to expand their footprint in Azure and there is a significant need to understand resource usage, optimize it as far as possible and plan for future growth. This solution is a simple framework which abstracts the intricacies of collecting the data for different use cases (Enterprise Agreement, CSP and Direct Azure Subscriptions), persists that data and finally provides a common model which can be used for data analytics.  
 ### Solution Architecture 
 
