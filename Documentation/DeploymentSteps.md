@@ -226,24 +226,26 @@ We recommend that you use the [Accounts Template](/Documentation/AccountsTemplat
         2. Next, update database connection string with appropriate values based on the deployment completed in Section 1. 
       *The format of the connection string is "data source=[SERVERNAME].database.windows.net;initial catalog=[DATABASENAME];persist security info=True;user id=[LOGINUSERNAME];password=[LOGINPASSWORD];MultipleActiveResultSets=True;App=EntityFramework"*  
       ![deployment_guide](/Documentation/Images/image54.png)
+        3. Set the 'access type for utilization records' section. 
+      Note: Incase the utlization API times out, set the value to 1 to directly fetch the records from the WebJob and update the 'fetch data for Partner Center Access' section as we did for the Web API.
       
-        3. Next, update URL for Web API section with appropriate values based on the deployment completed in Section 2.  
+        4. Next, update URL for Web API section with appropriate values based on the deployment completed in Section 2.  
       ![deployment_guide](/Documentation/Images/image55.png)
  
-        4.	Next, update Web API application credentials with appropriate values based on the deployment completed in Section 2 – Auth/Auth section.  
+        5.	Next, update Web API application credentials with appropriate values based on the deployment completed in Section 2 – Auth/Auth section.  
       ![deployment_guide](/Documentation/Images/image56.png)
 
-        5.	Next, provide the frequency at which the web job should be run. Default value is “Daily”.  
+        6.	Next, provide the frequency at which the web job should be run. Default value is “Daily”.  
       ![deployment_guide](/Documentation/Images/image57.png)
  
-        6.	Next, provide the Storage connection string created earlier for Data backup. 
+        7.	Next, provide the Storage connection string created earlier for Data backup. 
       *The format of the connection string is "DefaultEndpointsProtocol=https;AccountName=[NAME];AccountKey=[KEY]"*  
       ![deployment_guide](/Documentation/Images/image58.png)
 
-        7.	Next, provide the Customer Type for which the job should be run. You can provide a comma separated value to collect data for multiple types.  
+        8.	Next, provide the Customer Type for which the job should be run. You can provide a comma separated value to collect data for multiple types.  
       ![deployment_guide](/Documentation/Images/image59.png)
 
-        8. Next provide the start and end month for each customer type for which the job should be run. Leave End date as empty to ensure the last date is always current month.  
+        9. Next provide the start and end month for each customer type for which the job should be run. Leave End date as empty to ensure the last date is always current month.  
       ![deployment_guide](/Documentation/Images/image60.png)
   3. Publish to Azure
         1.	Rebuild the solution and ensure it rebuilds successfully.
