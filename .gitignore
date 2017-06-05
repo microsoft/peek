@@ -119,3 +119,5 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 
+/AzureBillingAnalytics/BillingDataDb/BillingDataDB.jfm
+/AzureBillingAnalytics/BillingWebJob/AzureAnalyticsApi/CspUtilization.cs

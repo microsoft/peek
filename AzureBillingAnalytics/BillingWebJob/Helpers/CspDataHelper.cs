@@ -15,11 +15,15 @@ namespace BillingWebJob.Helpers
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using BillingWebJob.AzureAnalyticsDb;
+    using AzureAnalyticsDb;
     using BillingWebJob.Models;
     using Microsoft.Rest;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
+    using Newtonsoft.Json;
+    using System.Data.SqlClient;
+    using System.Data;
+    using System.Data.Entity.Infrastructure;
 
     /// <summary>
     /// Helps in CSP data management.
@@ -29,7 +33,7 @@ namespace BillingWebJob.Helpers
         /// <summary>
         /// Object of API class to access it's methods.
         /// </summary>
-        internal static BillingWebJob.AzureAnalyticsApi AzureAnalyticsApi = new BillingWebJob.AzureAnalyticsApi();
+        internal static BillingWebJob.BillingDataApi AzureAnalyticsApi = new BillingWebJob.BillingDataApi();
 
         /// <summary>
         /// Parse the billing data collected from API into a custom class.
@@ -55,8 +59,8 @@ namespace BillingWebJob.Helpers
                         new CspBillingData
                         {
                             BillingProvider = relevantLineItem.BillingProvider,
-                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value.DateTime,
-                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value.DateTime,
+                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value,
+                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value,
                             ConsumedQuantity = relevantLineItem.ConsumedQuantity,
                             CustomerBillableAccount = relevantLineItem.CustomerBillableAccount,
                             CustomerCompanyName = relevantLineItem.CustomerCompanyName,
@@ -75,7 +79,7 @@ namespace BillingWebJob.Helpers
                             SubscriptionId = relevantLineItem.SubscriptionId,
                             SubscriptionName = relevantLineItem.SubscriptionName,
                             TiermpnId = relevantLineItem.TierMpnId,
-                            UsageDate = (DateTime?)relevantLineItem.UsageDate.Value.DateTime
+                            UsageDate = (DateTime?)relevantLineItem.UsageDate.Value
                         });
                 }
             }
@@ -107,8 +111,8 @@ namespace BillingWebJob.Helpers
                     cspBillingRecordsToBeAppendedInDb.Add(
                         new CspSummaryData
                         {
-                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value.DateTime,
-                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value.DateTime,
+                            ChargeEndDate = (DateTime?)relevantLineItem.ChargeEndDate.Value,
+                            ChargeStartDate = (DateTime?)relevantLineItem.ChargeStartDate.Value,
                             ChargeType = relevantLineItem.ChargeType,
                             ConsumedQuantity = relevantLineItem.ConsumedQuantity,
                             ConsumptionDiscount = relevantLineItem.ConsumptionDiscount,
@@ -174,8 +178,8 @@ namespace BillingWebJob.Helpers
                     newItemsForDatabase.Add(
                         new CspUsageData
                         {
-                            BillingEndDate = (DateTime?)usageRecord.BillingEndDate.Value.DateTime,
-                            BillingStartDate = (DateTime?)usageRecord.BillingStartDate.Value.DateTime,
+                            BillingEndDate = (DateTime?)usageRecord.BillingEndDate.Value,
+                            BillingStartDate = (DateTime?)usageRecord.BillingStartDate.Value,
                             Category = usageRecord.Category,
                             CustomerCommerceId = usageRecord.CustomerCommerceId,
                             CustomerDomain = usageRecord.CustomerDomain,
@@ -434,9 +438,9 @@ namespace BillingWebJob.Helpers
                     // Call API
                     Console.WriteLine("No existing records found in Database for this month. Calling API for the data..");
                     cspSummaryRecordsFromApi =
-                        AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                        AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                     cspBillingRecordsFromApi =
-                        AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                        AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                     Console.WriteLine(
                         "{0} data rows returned from the csp summary api.",
                         cspSummaryRecordsFromApi.Body.Count);
@@ -479,9 +483,9 @@ namespace BillingWebJob.Helpers
                         Console.WriteLine("Successfully deleted {0} Rows.", result, month, year);
                         Console.WriteLine("Calling API for current month's data.. ");
                         cspSummaryRecordsFromApi =
-                            AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                            AzureAnalyticsApi.CspSummary.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                         cspBillingRecordsFromApi =
-                            AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithOperationResponseAsync(date).Result;
+                            AzureAnalyticsApi.CspBilling.GetSingleMonthDataWithHttpMessagesAsync(date).Result;
                         Console.WriteLine(
                             "{0} data rows returned from the csp summary api.",
                             cspSummaryRecordsFromApi.Body.Count);
@@ -528,7 +532,7 @@ namespace BillingWebJob.Helpers
                 "\nFetching records for Current Month's Usage from the API. This may take a while. If this operation is timimg out, consider increasing the TimeOut limit in Configuration file. ");
 
             HttpOperationResponse<IList<CspAzureResourceUsageRecord>> cspUsageRecordsFromApi =
-                AzureAnalyticsApi.CspUsage.GetAllDataWithOperationResponseAsync().Result;
+                AzureAnalyticsApi.CspUsage.GetAllDataWithHttpMessagesAsync().Result;
             Console.WriteLine("\n" + cspUsageRecordsFromApi.Body.Count + " records fetched from the API.. ");
 
             if (cspUsageRecordsFromApi.Body != null && cspUsageRecordsFromApi.Body.Count > 0)
@@ -621,9 +625,170 @@ namespace BillingWebJob.Helpers
                 Console.WriteLine("End date is greater than Start date. Please Check..");
             }
 
+            ; IList < AzureUtilizationRecord> cspUtilizationRecordsFromApi = null;
+            Console.WriteLine("\nNow fetching utilization records from the API.");
+
+            // Fetch from API or directly fetch from Partner Center
+            // 0 - Fetch from API
+            // 1 - Fetch directly
+
+            if (ConfigurationManager.AppSettings["UtilizationAccessSource"] == "0")
+            {
+                Console.WriteLine("\nNow fetching utilization records from the API.");
+                var x = new CspUtilization(AzureAnalyticsApi);
+                HttpOperationResponse<IList<AzureUtilizationRecord>> cspUtilizationRecordsFromApiResponse 
+                    = x.GetDataForCustomerSubscriptionWithHttpMessagesAsync().Result;
+                cspUtilizationRecordsFromApi = cspUtilizationRecordsFromApiResponse.Body;
+            }
+
+            else
+            {
+                Console.WriteLine("\nNow fetching utilization records from the Partner Center SDK.");
+                CspUtilizationHelper helperObj = new CspUtilizationHelper();
+                cspUtilizationRecordsFromApi = helperObj.doTheTask();
+            }
+            //string output = JsonConvert.SerializeObject(cspUtilizationRecordsFromApi.Body);
+            //System.IO.File.WriteAllText(@".\customJson2.json", output);
+            //string json = System.IO.File.ReadAllText(@".\customJson2.json");
+            //IList<AzureUtilizationRecord> itemsFromApi = JsonConvert.DeserializeObject<IList<AzureUtilizationRecord>>(cspUtilizationRecordsFromApi.Body);
+
+            if (cspUtilizationRecordsFromApi != null && cspUtilizationRecordsFromApi.Count > 0)
+            {
+                totalRecordsCount += CspDataHelper.UpdateCurrentUtilizationRecordsInDb(cspUtilizationRecordsFromApi);
+            }
             status = 1;
+
+            Console.WriteLine("Successfully wrote data to the Utlization Table");
         }
 
+        internal static int UpdateCurrentUtilizationRecordsInDb(IList<AzureUtilizationRecord> cspUtilizationRecordsFromApi)
+        {
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Id", typeof(int));
+            dataTable.Columns.Add("UsageStartTime", typeof(DateTime));
+            dataTable.Columns.Add("UsageEndTime", typeof(DateTime));
+            dataTable.Columns.Add("ResourceId", typeof(string));
+            dataTable.Columns.Add("ResourceName", typeof(string));
+            dataTable.Columns.Add("ResourceCategory", typeof(string));
+            dataTable.Columns.Add("ResourceSubCategory", typeof(string));
+            dataTable.Columns.Add("Quantity", typeof(float));
+            dataTable.Columns.Add("Unit", typeof(string));
+            dataTable.Columns.Add("InfoFields", typeof(string));
+            dataTable.Columns.Add("InstanceDataResourceUri", typeof(string));
+            dataTable.Columns.Add("InstanceDataLocation", typeof(string));
+            dataTable.Columns.Add("InstanceDataPartNumber", typeof(string));
+            dataTable.Columns.Add("InstanceDataOrderNumber", typeof(string));
+            dataTable.Columns.Add("InstanceDatatags", typeof(string));
+            dataTable.Columns.Add("Attributes", typeof(string));
+            Console.WriteLine("\nAll Usage data which exist in DB will be deleted and replaced by new line items.");
+            
+            using (AzureAnalyticsDbModel dbContext = new AzureAnalyticsDbModel())
+            {
+                int NumberOfTtemsFromDatabase = dbContext.CspUtilizationDatas.Count();
+                Console.WriteLine("\n" + NumberOfTtemsFromDatabase + " usage records exist in DB and will be deleted.");
+                if (NumberOfTtemsFromDatabase > 0)
+                {
+                    dbContext.Database.ExecuteSqlCommand("delete from CspUtilizationData");
+                }
+
+
+                List<CspUtilizationData> newItemsForDatabase = new List<CspUtilizationData>();
+
+                foreach (var utilizationRecord in cspUtilizationRecordsFromApi)
+                {
+                    var arg1 = utilizationRecord.InfoFields.Count == 0 || utilizationRecord.InfoFields == null ? "" : String.Join(",", utilizationRecord.InfoFields.ToArray());
+                    var arg2 = utilizationRecord.InstanceData.Tags == null || utilizationRecord.InstanceData.Tags.Count == 0 ? "" : String.Join("/,", utilizationRecord.InstanceData.Tags.ToArray());
+                    dataTable.Rows.Add(0, (DateTime?)utilizationRecord.UsageStartTime.Value, (DateTime?)utilizationRecord.UsageEndTime.Value, utilizationRecord.Resource.Id, utilizationRecord.Resource.Name, utilizationRecord.Resource.Category, utilizationRecord.Resource.Subcategory, utilizationRecord.Quantity, utilizationRecord.Unit, arg1, utilizationRecord.InstanceData.ResourceUri, utilizationRecord.InstanceData.Location, utilizationRecord.InstanceData.OrderNumber, utilizationRecord.InstanceData.PartNumber, arg2, utilizationRecord.Attributes.Etag);
+
+                }
+
+                Console.WriteLine("\n" + dataTable.Rows.Count + " new usage records will be added to the database.");
+                using (var bulkCopy = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["AzureAnalyticsDbModel"].ConnectionString))
+                {
+
+                    bulkCopy.ColumnMappings.Add("UsageStartTime", "UsageStartTime");
+                    bulkCopy.ColumnMappings.Add("UsageEndTime", "UsageEndTime");
+                    bulkCopy.ColumnMappings.Add("ResourceId", "ResourceId");
+                    bulkCopy.ColumnMappings.Add("ResourceName", "ResourceName");
+                    bulkCopy.ColumnMappings.Add("ResourceCategory", "ResourceCategory");
+                    bulkCopy.ColumnMappings.Add("ResourceSubCategory", "ResourceSubCategory");
+                    bulkCopy.ColumnMappings.Add("Quantity", "Quantity");
+                    bulkCopy.ColumnMappings.Add("Unit", "Unit");
+                    bulkCopy.ColumnMappings.Add("InfoFields", "InfoFields");
+                    bulkCopy.ColumnMappings.Add("InstanceDataResourceUri", "InstanceDataResourceUri");
+                    bulkCopy.ColumnMappings.Add("InstanceDataLocation", "InstanceDataLocation");
+                    bulkCopy.ColumnMappings.Add("InstanceDataPartNumber", "InstanceDataPartNumber");
+                    bulkCopy.ColumnMappings.Add("InstanceDataOrderNumber", "InstanceDataOrderNumber");
+                    bulkCopy.ColumnMappings.Add("InstanceDataTags", "InstanceDataTags");
+                    bulkCopy.ColumnMappings.Add("Attributes", "Attributes");
+
+                    bulkCopy.BatchSize = 10000;
+                    bulkCopy.BulkCopyTimeout = 600;
+                    bulkCopy.DestinationTableName = "CspUtilizationData";
+                    bulkCopy.WriteToServer(dataTable);
+                }
+
+                Console.WriteLine("\n" + newItemsForDatabase.Count() + " new usage records will be added to the database.");
+
+
+            }
+            return 0;
+        }
+
+        //internal static int UpdateCurrentUtilizationRecordsInDb(IList<AzureUtilizationRecord> cspUtilizationRecordsFromApi)
+        //{
+        //    Console.WriteLine("\nAll Usage data which exist in DB will be deleted and replaced by new line items.");
+        //    int count;
+        //    using (AzureAnalyticsDbModel dbContext = new AzureAnalyticsDbModel())
+        //    {
+        //        dbContext.Configuration.AutoDetectChangesEnabled = false;
+        //        dbContext.Configuration.ValidateOnSaveEnabled = false;
+        //        List<CspUtilizationData> itemsFromDatabase = dbContext.CspUtilizationDatas.ToList();
+        //        Console.WriteLine("\n" + itemsFromDatabase.Count() + " usage records exist in DB and will be deleted.");
+        //        if (itemsFromDatabase.Count() > 0)
+        //        {
+        //            dbContext.CspUtilizationDatas.RemoveRange(itemsFromDatabase);
+        //            dbContext.SaveChanges();
+        //        }
+
+        //        List<CspUtilizationData> newItemsForDatabase = new List<CspUtilizationData>();
+
+        //        foreach (AzureUtilizationRecord utilizationRecord in cspUtilizationRecordsFromApi.ToList())
+        //        {
+        //            newItemsForDatabase.Add(
+        //                new CspUtilizationData
+        //                {
+        //                    UsageStartTime = (DateTime?)utilizationRecord.UsageStartTime.Value,
+        //                    UsageEndTime = (DateTime?)utilizationRecord.UsageEndTime.Value,
+        //                    ResourceId = utilizationRecord.Resource.Id,
+        //                    ResourceName = utilizationRecord.Resource.Name,
+        //                    ResourceCategory = utilizationRecord.Resource.Category,
+        //                    ResourceSubCategory = utilizationRecord.Resource.Subcategory,
+        //                    Quantity = utilizationRecord.Quantity,
+        //                    Unit = utilizationRecord.Unit,
+        //                    infoFields = utilizationRecord.InfoFields.Count == 0 || utilizationRecord.InfoFields == null? null : String.Join(",", utilizationRecord.InfoFields.ToArray()),
+        //                    InstanceDataResourceUri = utilizationRecord.InstanceData.ResourceUri,
+        //                    InstanceDataLocation = utilizationRecord.InstanceData.Location,
+        //                    InstanceDataOrderNumber = utilizationRecord.InstanceData.OrderNumber,
+        //                    InstanceDataPartNumber = utilizationRecord.InstanceData.PartNumber,
+        //                    InstanceDatatags = utilizationRecord.InstanceData.Tags == null || utilizationRecord.InstanceData.Tags.Count == 0? null : String.Join(",", utilizationRecord.InstanceData.Tags.ToArray()),
+        //                    Attributes = utilizationRecord.Attributes.Etag
+        //                });
+        //        }
+        //        Console.WriteLine("\n" + newItemsForDatabase.Count() + " new usage records will be added to the database.");
+        //        string output = JsonConvert.SerializeObject(newItemsForDatabase);
+        //        System.IO.File.WriteAllText(@".\customJson.json", output);
+        //        string json = System.IO.File.ReadAllText(@".\customJson.json");
+        //        List<CspUtilizationData> itemsForDatabase = JsonConvert.DeserializeObject<List<CspUtilizationData>>(json);
+
+        //        dbContext.ChangeTracker.DetectChanges();
+        //        dbContext.CspUtilizationDatas.AddRange(itemsForDatabase);
+        //        count = dbContext.SaveChanges();
+
+        //    }
+        //    return count;
+        //}
         /// <summary>
         /// For getting the start and end date for fetching data from config file.
         /// </summary>

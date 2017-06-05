@@ -31,7 +31,7 @@ namespace BillingWebJob
     public class Program
     {
         /// <summary>
-        /// Azure WebJob method to be run.
+        /// Azure WebJob method to be run.  
         /// </summary>
         /// <param name="timer">Timing configuration of web job.</param>
         public static void CronJob(

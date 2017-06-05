@@ -25,7 +25,7 @@ namespace BillingWebJob.Helpers
     /// </summary>
     public static class UserHelper
     {
-        private static BillingWebJob.AzureAnalyticsApi bd = new BillingWebJob.AzureAnalyticsApi();
+        private static BillingWebJob.BillingDataApi bd = new BillingWebJob.BillingDataApi();
 
         /// <summary>
         /// Get data from API for a start and end date
@@ -43,12 +43,12 @@ namespace BillingWebJob.Helpers
                 startDate = startDate.Split('-')[1] + "-" + startDate.Split('-')[0];
                 endDate = endDate.Split('-')[1] + "-" + endDate.Split('-')[0];
                 billingRecordsFromApi =
-                    bd.UserBilling.GetDataForMonthRangeWithOperationResponseAsync(startDate, endDate).Result;
+                    bd.UserBilling.GetDataForMonthRangeWithHttpMessagesAsync(startDate, endDate).Result;
             }
             else
             {
                 Console.WriteLine("Fetching pricing data for current month..");
-                billingRecordsFromApi = bd.UserBilling.GetCurrentMonthDataWithOperationResponseAsync().Result;
+                billingRecordsFromApi = bd.UserBilling.GetCurrentMonthDataWithHttpMessagesAsync().Result;
             }
 
             return billingRecordsFromApi;

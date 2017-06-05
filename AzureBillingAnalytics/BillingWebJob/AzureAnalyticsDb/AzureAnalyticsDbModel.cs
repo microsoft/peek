@@ -13,6 +13,7 @@ namespace BillingWebJob.AzureAnalyticsDb
         public virtual DbSet<CspBillingData> CspBillingDatas { get; set; }
         public virtual DbSet<CspSummaryData> CspSummaryDatas { get; set; }
         public virtual DbSet<CspUsageData> CspUsageDatas { get; set; }
+        public virtual DbSet<CspUtilizationData> CspUtilizationDatas { get; set; }
         public virtual DbSet<EaBillingData> EaBillingDatas { get; set; }
         public virtual DbSet<UserBillingData> UserBillingDatas { get; set; }
         public virtual DbSet<UserInfoField> UserInfoFields { get; set; }

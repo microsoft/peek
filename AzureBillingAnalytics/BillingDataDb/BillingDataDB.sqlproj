@@ -135,5 +135,6 @@
     <Build Include="dbo\Tables\CspSummaryData.sql" />
     <Build Include="dbo\Views\vBillingFromAllSubscriptionTypes.sql" />
     <Build Include="dbo\Tables\CspUsageData.sql" />
+    <Build Include="dbo\Tables\CspUtilizationData.sql" />
   </ItemGroup>
 </Project>
